@@ -1,0 +1,33 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_for  @mapping, url: {action: action_name == 'new' ? 'create' : 'update'}, html: { class: 'form' } do |f| %>
+      <div class="form-group <%= @is_pending && @mapping_pendings["name"] != @mapping.name ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :name do %>
+          Name: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :name, value: !@is_pending ? @mapping.name : @mapping_pendings["name"], class: 'form-control', required: true %>
+        <% if @is_pending && @mapping_pendings["name"] != @mapping.name  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @mapping.name %></span>
+        <% end %>
+      </div>
+      <div class="form-group <%= @is_pending && @mapping_pendings["list"] != @mapping.list ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :list do %>
+          Values: <span>&#42;</span>
+        <% end %>
+        <p><em>Enter values separated with new line</em></p>
+        <%= f.text_area :list, value: !@is_pending ? @mapping.list : @mapping_pendings["list"], class: 'form-control', required: true, rows: 3 %>
+        <% if @is_pending && @mapping_pendings["list"] != @mapping.list  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @mapping.list %></span>
+        <% end %>
+      </div>
+
+      <%= f.submit action_name == 'new' ? 'Submit' : 'Save Changes', class: 'btn btn-success' %>
+
+      <%= link_to 'Cancel', mapping_list_path, class: 'btn btn-warning' %>
+    <% end %>
+
+    <% if action_name == 'edit' && is_super_admin %>
+      <p class='delete-button'><a href = "/mapping/delete/<%= @mapping.id %>" class="btn btn-danger" >Delete this Mapping</a></p>
+    <% end %>
+  </div>
+</div>

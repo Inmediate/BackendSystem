@@ -1,0 +1,20 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: root
+  password: 1234
+  socket: /tmp/mysql.sock
+  timeout: 5000
+
+development:
+  <<: *default
+  database: insurer_market_api-development
+
+test:
+  <<: *default
+  database: insurer_market_api-test
+
+production:
+  <<: *default
+  database: insurer_market_api

@@ -1,0 +1,22 @@
+<table id="insurer_mapping_list" class="cell-border">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Name</th>
+    <th># of items</th>
+    <th>Edit</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @insurer_mapping.each_with_index do |map, index|%>
+    <tr>
+      <td><%= index + 1%></td>
+      <td><%= Mapping.find(map['id']).name %></td>
+      <td><%= map['value'].count %></td>
+      <td><a href="/insurer/<%= @insurer.id %>/mapping/edit/<%= map['id'] %>"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+

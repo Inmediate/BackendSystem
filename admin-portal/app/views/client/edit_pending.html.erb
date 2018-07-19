@@ -1,0 +1,109 @@
+<!--<h3>Manage Clients > Edit Client</h3>-->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_for  @client, url: {action: "update_pending"}, html: { class: 'form' } do |f| %>
+      <div class="form-group  ">
+        <%= f.label :name do %>
+          Company Name: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :name, value: @client_pending["name"], class: 'form-control', required: true %>
+      </div>
+      <div class="form-group">
+        <%= f.label :address, 'Company Address:' %>
+        <%= f.text_field :address, value: @client_pending["address"], class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :phone, 'Company Phone:' %>
+        <%= f.text_field :phone, value: @client_pending["phone"], class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :website_url, 'Company Website:' %>
+        <%= f.text_field :website_url, value: @client_pending["website_url"], class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :contact_person_name do %>
+          Contact Person Name: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :contact_person_name, value: @client_pending["contact_person_name"], class: 'form-control', required: true %>
+      </div>
+      <div class="form-group">
+        <%= f.label :contact_person_email do %>
+          Contact Person E-mail: <span>&#42;</span>
+        <% end %>
+        <%= f.email_field :contact_person_email, value: @client_pending["contact_person_email"], class: 'form-control', required: true %>
+      </div>
+      <div class="form-group">
+        <%= f.label :contact_person_phone, 'Contact Person Phone:' %>
+        <%= f.text_field :contact_person_phone, value: @client_pending["contact_person_phone"], class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :broker_code, 'Broker Code:' %>
+        <%= f.text_field :broker_code, value: @client_pending["broker_code"], class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :billing_type, 'Biling Type:' %>
+        <%= f.select :billing_type, options_for_select([%w(Annually annually), %w(Monthly monthly), %w(Usage usage)], {selected: @client_pending["billing_type"] }), {}, class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :whitelisted_ip, 'Whitelist IP (IPv4 Address):' %>
+        <p><em>Enter multiple Whitelist IP with new line.</em></p>
+        <%= f.text_field :whitelisted_ip, value: @client_pending["whitelisted_ip"], class: 'form-control', rows: 3 %>
+      </div>
+      <div class="form-group">
+        <%= f.label :client_code, 'Client Code:' %>
+        <p class="token"><%= @client_pending["client_code"] %></p>
+        <%= f.hidden_field :client_code, value: @client_pending["client_code"] %>
+      </div>
+      <div class="form-group">
+        <%= f.label :client_api_key, 'Client API Key:' %>
+        <p class="token"><%= @client_pending["client_api_key"] %></p>
+        <%= f.hidden_field :client_api_key, value: @client_pending["client_api_key"] %>
+        <%= link_to 'Reset Client API Key', "/client/reset_api_key_pending/#{@approval.id}", {class:"btn btn-info" }%>
+      </div>
+      <div class="form-group">
+        <%= f.label :api_insurer, 'Allowed Client APIs and Allowed Insurers (By Products):' %>
+        <% Product.where(status: true).where(activation_status: true).each do |product| %>
+          <% if product.client_apis.where(status: true).where(activation_status: true).any? && product.insurers.where(status: true).where(activation_status: true).any?%>
+            <table  class="table table-bordered">
+              <thead >
+              <tr class="active">
+                <th colspan="2">Product: <%= product.name %></th>
+              </tr>
+              <tr>
+                <th>Client APIs</th>
+                <th>Insurers</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td class="multi-selection">
+                  <% product.client_apis.where(status: true).where(activation_status: true).each do |api| %>
+                    <input type="checkbox" value="<%= api.id %>" name="client[client_apis][]"  <%= @client_api_pending.include?(api.id.to_s) ? 'checked' : nil %> >
+                    <%= f.label :client_api, api.name %><br>
+                  <% end %>
+                </td>
+                <td class="multi-selection">
+                  <% product.insurers.where(status: true).where(activation_status: true).each do |insurer| %>
+                    <input type="checkbox" value="<%= insurer.id %>" name="client[insurers][<%= product.id %>][]"  <%= !JSON.parse(@client_pending['insurers'])[product.id.to_s].blank? && JSON.parse(@client_pending['insurers'])[product.id.to_s].any? {|s| s == insurer.id.to_s} ? 'checked' : nil %> >
+                    <%= f.label :insurer, insurer.company_name %><br>
+                  <% end %>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          <% end %>
+        <% end %>
+
+      </div>
+      <div class="form-group">
+        <%= f.label :activation_status, 'Activated' %>
+        <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected: @client_pending["activation_status"] }), {}, class: 'form-control', disabled: !can_approve_reject_deactivate  %>
+      </div>
+
+      <%= f.submit action_name == 'new' ? 'Submit' : 'Save Changes', class: 'btn btn-success' %>
+      <%= link_to 'Cancel', client_list_path, class: 'btn btn-warning' %>
+
+    <% end %>
+
+  </div>
+</div>

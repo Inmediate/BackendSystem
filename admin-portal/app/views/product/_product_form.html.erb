@@ -1,0 +1,51 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_for  @product, url: {action: action_name == 'new' || action_name == 'create' ? 'create' : 'update'}, html: { class: 'form' } do |f| %>
+      <div class="form-group <%= @is_pending && @product_pending["name"] != @product.name ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :name do %>
+          Product Name: <span>&#42;</span>
+        <% end %>
+        <% if action_name == 'update' %>
+          <%= f.text_field :name, value: params[:product]["name"], class: 'form-control', required: true %>
+        <% else %>
+          <%= f.text_field :name, value: !@is_pending  ? @product.name : @product_pending["name"], class: 'form-control', required: true %>
+        <% end %>
+        <% if @is_pending && @product_pending["name"] != @product.name  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @product.name %></span>
+        <% end %>
+      </div>
+      <div class="form-group <%= @is_pending && @product_pending["code"] != @product.code ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :code do %>
+          Product Code: <span>&#42;</span>
+        <% end %>
+        <% if action_name == 'update' %>
+          <%= f.text_field :code, value: params[:product]["code"], class: 'form-control', required: true %>
+        <% else %>
+          <%= f.text_field :code, value: !@is_pending  ? @product.code : @product_pending["code"], class: 'form-control', required: true %>
+        <% end %>
+        <% if @is_pending && @product_pending["code"] != @product.code  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @product.code %></span>
+        <% end %>
+      </div>
+      <div class="form-group <%= @is_pending && @product_pending["activation_status"] != @product.activation_status.to_s ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :activation_status, 'Activated' %>
+        <% if action_name == 'update' %>
+          <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected: params[:product]["activation_status"] }), {}, class: 'form-control', disabled: !can_approve_reject_deactivate %>
+        <% else %>
+          <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected: !@is_pending  ? @product.activation_status : @product_pending["activation_status"] }), {}, class: 'form-control', disabled: !can_approve_reject_deactivate %>
+        <% end %>
+        <% if @is_pending && @product_pending["activation_status"] != @product.activation_status.to_s  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @product.activation_status ? "Activated" : "Deactivated" %></span>
+        <% end %>
+      </div>
+
+      <%= f.submit action_name == 'new' || action_name == 'create' ? 'Submit' : 'Save Changes', class: 'btn btn-success' %>
+
+      <%= link_to 'Cancel', product_list_path, class: 'btn btn-warning' %>
+    <% end %>
+
+    <% if action_name == 'edit' || action_name == 'update' && is_super_admin %>
+      <p class='delete-button'><a href = "/product/delete/<%= @product.id %>" class="btn btn-danger" >Delete this Product</a></p>
+    <% end %>
+  </div>
+</div>

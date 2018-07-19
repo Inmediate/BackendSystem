@@ -1,0 +1,37 @@
+<!--<h3>Reports: Approval</h3>-->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <input type="hidden" id="startDate" value="<%= @startDate.strftime('%d/%m/%Y') %>" >
+    <input type="hidden" id="endDate" value="<%= @endDate.strftime('%d/%m/%Y') %>" >
+    <form action="">
+      <div class="row">
+        <div class="col-lg-3">
+          <div class="form-group">
+            <%= label_tag(:dateRange, "Date Range:")%>
+            <%= text_field_tag(:dateRange, "test", class: 'form-control') %>
+          </div>
+        </div>
+      </div>
+      <a href="#" class="btn btn-success" id="approval_search_log" >Search</a>
+      <a href="#" class="btn btn-primary" id="approval_view_all_log">View All</a>
+    </form>
+
+    <table id="log_approval_list" class="cell-border" style="table-layout: fixed; width: 100%">
+      <thead>
+      <tr>
+        <th style="width: 100px;" >Timestamp</th>
+        <th style="width: 50px;">Action</th>
+        <th style="width: 110px;">Item</th>
+        <th >New Values</th>
+        <th >Old Values</th>
+        <th >Performed By</th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+

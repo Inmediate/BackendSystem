@@ -1,0 +1,202 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+
+    <input type="hidden" id="insurer_id" value="<%= @insurer.id %>">
+
+    <%= form_for @insurer, url: {action: action_name == 'new' || action_name == 'create' ? 'create' : 'update'}, html: { class: 'form' } do |f| %>
+      <div class="form-group <%= @is_pending && @insurer_pending["company_name"] != @insurer.company_name ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :company_name do %>
+          Company Name: <span>&#42;</span>
+        <% end %>
+        <% if action_name == 'update'%>
+          <%= f.text_field :company_name, value: params[:insurer]["company_name"], class: 'form-control', required: true %>
+        <% else %>
+          <%= f.text_field :company_name, value: !@is_pending ? @insurer.company_name : @insurer_pending["company_name"], class: 'form-control', required: true %>
+        <% end %>
+        <% if @is_pending && @insurer_pending["company_name"] != @insurer.company_name  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @insurer.company_name %></span>
+        <% end %>
+      </div>
+      <div class="form-group <%= @is_pending && @insurer_pending["company_address"] != @insurer.company_address ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :company_address, 'Company Address:' %>
+        <% if action_name == 'update'%>
+          <%= f.text_area :company_address, value: params[:insurer]["company_address"], class: 'form-control' %>
+        <% else %>
+          <%= f.text_area :company_address, value:!@is_pending ? @insurer.company_address : @insurer_pending["company_address"], class: 'form-control' %>
+        <% end %>
+        <% if @is_pending && @insurer_pending["company_address"] != @insurer.company_address  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @insurer.company_address %></span>
+        <% end %>
+      </div>
+      <div class="form-group <%= @is_pending && @insurer_pending["company_phone"] != @insurer.company_phone ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :company_phone, 'Company Phone:' %>
+        <% if action_name == 'update'%>
+          <%= f.text_field :company_phone, value: params[:insurer]["company_phone"], class: 'form-control' %>
+        <% else %>
+          <%= f.text_field :company_phone, value: !@is_pending ? @insurer.company_phone : @insurer_pending["company_phone"], class: 'form-control' %>
+        <% end %>
+        <% if @is_pending && @insurer_pending["company_phone"] != @insurer.company_phone  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @insurer.company_phone %></span>
+        <% end %>
+      </div>
+      <div class="form-group <%= @is_pending && @insurer_pending["website_url"] != @insurer.website_url ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :website_url, 'Company Website:' %>
+        <% if action_name == 'update'%>
+          <%= f.text_field :website_url, value: params[:insurer]["website_url"], class: 'form-control' %>
+        <% else %>
+          <%= f.text_field :website_url, value: !@is_pending ? @insurer.website_url : @insurer_pending["website_url"], class: 'form-control' %>
+        <% end %>
+        <% if @is_pending && @insurer_pending["website_url"] != @insurer.website_url  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @insurer.website_url %></span>
+        <% end %>
+      </div>
+      <div class="form-group <%= @is_pending && @insurer_pending["contact_person_name"] != @insurer.contact_person_name ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :contact_person_name do %>
+          Contact Person Name: <span>&#42;</span>
+        <% end %>
+        <% if action_name == 'update'%>
+          <%= f.text_field :contact_person_name, value: params[:insurer]["contact_person_name"], class: 'form-control', required: true %>
+        <% else %>
+          <%= f.text_field :contact_person_name, value: !@is_pending ? @insurer.contact_person_name : @insurer_pending["contact_person_name"], class: 'form-control', required: true %>
+        <% end %>
+        <% if @is_pending && @insurer_pending["contact_person_name"] != @insurer.contact_person_name  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @insurer.contact_person_name %></span>
+        <% end %>
+      </div>
+      <div class="form-group <%= @is_pending && @insurer_pending["contact_person_email"] != @insurer.contact_person_email ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :contact_person_email do %>
+          Contact Person E-mail: <span>&#42;</span>
+        <% end %>
+        <% if action_name == 'update'%>
+          <input type="email" class="form-control" name="insurer[contact_person_email]" id="insurer_contact_person_email" required="required" value="<%= params[:insurer]["contact_person_email"]%>" multiple >
+        <% else %>
+          <input type="email" class="form-control" name="insurer[contact_person_email]" id="insurer_contact_person_email" required="required" value="<%=!@is_pending ? @insurer.contact_person_email : @insurer_pending["contact_person_email"] %>" multiple >
+        <% end %>
+        <% if @is_pending && @insurer_pending["contact_person_email"] != @insurer.contact_person_email  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @insurer.contact_person_email %></span>
+        <% end %>
+      </div>
+      <div class="form-group <%= @is_pending && @insurer_pending["contact_person_phone"] != @insurer.contact_person_phone ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :contact_person_phone, 'Contact Person Phone:' %>
+        <% if action_name == 'update'%>
+          <%= f.text_field :contact_person_phone, value: params[:insurer]["contact_person_phone"], class: 'form-control' %>
+        <% else %>
+          <%= f.text_field :contact_person_phone, value: !@is_pending ? @insurer.contact_person_phone : @insurer_pending["contact_person_phone"], class: 'form-control' %>
+        <% end %>
+        <% if @is_pending && @insurer_pending["contact_person_phone"] != @insurer.contact_person_phone  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @insurer.contact_person_phone %></span>
+        <% end %>
+      </div>
+      <div class="form-group <%= @is_pending && @insurer_pending["company_code"] != @insurer.company_code ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :company_code do %>
+          Company Code: <span>&#42;</span>
+        <% end %>
+        <% if action_name == 'update'%>
+          <%= f.text_field :company_code, value: params[:insurer]['company_code'], class: 'form-control', required: true %>
+        <% else %>
+          <%= f.text_field :company_code, value: !@is_pending ? @insurer.company_code : @insurer_pending["company_code"], class: 'form-control', required: true %>
+        <% end %>
+        <% if @is_pending && @insurer_pending["company_code"] != @insurer.company_code  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @insurer.company_code %></span>
+        <% end %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :product, 'Supported Products:' %>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <% Product.where(status: true).where(activation_status: true).each do |product| %>
+              <% if action_name == 'edit'%>
+                <% if @is_pending %>
+                  <input type="checkbox" value="<%= product.id %>" name="insurer[products][]"  <%= @insurer_pending['products'].include?(product.id.to_s) ? 'checked' : nil %> >
+                <% else %>
+                  <input type="checkbox" value="<%= product.id %>" name="insurer[products][]"  <%= @insurer.products.where(id: product.id).any? ? 'checked' : nil %> >
+                <% end %>
+              <% elsif action_name == 'create' || action_name == 'update' %>
+                <input type="checkbox" value="<%= product.id %>" name="insurer[products][]"  <%= !params[:insurer]['products'].blank? && params[:insurer]['products'].include?(product.id.to_s) ? 'checked' : nil %> >
+              <% else %>
+                <input type="checkbox" value="<%= product.id %>" name="insurer[products][]" >
+              <% end %>
+              <%= f.label :products, product.name %><br>
+            <% end %>
+          </div>
+        </div>
+
+      </div>
+
+      <input type="hidden" id="ip_product">
+
+      <div class="form-group">
+        <%= f.label :product_api, 'Insurer Product APIs:' %>
+        <div class="panel panel-default">
+          <div class="panel-body">
+              <% if action_name == 'new' || action_name == 'create' %>
+                <p><em>This cannot be created until this insurer is activated</em></p>
+              <% else %>
+                <br>
+                <%= link_to 'Add New Product API', "/insurer/#{@insurer.id}/api/new", class: 'btn btn-info' %>
+              <div class="btn-group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Sort by <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a href="#" id="ip_all">All</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li class="sub_title">Product</li>
+                  <% @insurer_products.each do |product| %>
+                    <li><a href="#" data-result-code="<%= product.id %>" data-result-code-name="<%= product.id %>"  class="result-code-option" ><%= product.name %></a></li>
+                  <% end %>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#" id="ip_auth_api">Authentication API</a></li>
+                </ul>
+              </div>
+                <%= render 'insurer/insurer_product_api_list'%>
+              <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group <%= @is_pending && @insurer_pending["mapping"] != @insurer.mapping ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :mapping, 'Mapping List:' %>
+        <%= f.hidden_field :mapping, value: !@is_pending ? @insurer.mapping : @insurer_pending["mapping"]%>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <% if action_name == 'new' || action_name == 'create' %>
+              <p><em>This cannot be created until this insurer is activated</em></p>
+            <% else %>
+              <br>
+              <%= link_to 'Clone a Mapping List', "/insurer/#{@insurer.id}/mapping/new", class: 'btn btn-info' %>
+              <%= render 'insurer/insurer_mapping_list'%>
+          <% end %>
+          </div>
+        </div>
+
+        <% if @is_pending && @insurer_pending["mapping"] != @insurer.mapping  %>
+          <span id="helpBlock" class="help-block">Pending Value: <%= @insurer_pending["mapping"] %></span>
+        <% end %>
+      </div>
+
+      <div class="form-group <%= @is_pending && @insurer_pending["activation_status"] != @insurer.activation_status.to_s ? "alert alert-warning".html_safe : nil%> ">
+        <%= f.label :activation_status, 'Activated' %>
+        <% if action_name == 'new'%>
+          <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected: @insurer.activation_status  }), {}, class: 'form-control', disabled: !can_approve_reject_deactivate  %>
+        <% elsif action_name == 'update' %>
+          <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected: params[:insurer]['activation_status']  }), {}, class: 'form-control', disabled: !can_approve_reject_deactivate  %>
+        <% else %>
+          <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected:  !@is_pending ? @insurer.activation_status : @insurer_pending["activation_status"] }), {}, class: 'form-control', disabled: !can_approve_reject_deactivate  %>
+        <% end %>
+        <% if @is_pending && @insurer_pending["activation_status"] != @insurer.activation_status.to_s  %>
+          <span id="helpBlock" class="help-block">Current Value: <%= @insurer.activation_status ? 'Activated' : 'Deactivated' %></span>
+        <% end %>
+      </div>
+
+      <%= f.submit action_name == 'new' || action_name == 'create' ? 'Submit' : 'Save Changes', class: 'btn btn-success' %>
+
+      <%= link_to 'Cancel', insurer_list_path, class: 'btn btn-warning' %>
+    <% end %>
+
+    <% if action_name == 'edit' || action_name == 'update' && is_super_admin %>
+      <p class='delete-button'><a href = "/insurer/delete/<%= @insurer.id %>" class="btn btn-danger" >Delete this Insurer</a></p>
+    <% end %>
+  </div>
+</div>

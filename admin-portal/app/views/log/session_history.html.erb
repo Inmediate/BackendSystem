@@ -1,0 +1,38 @@
+<!--<h3>Reports: Session History</h3>-->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <input type="hidden" id="startDate" value="<%= @startDate.strftime('%d/%m/%Y') %>" >
+    <input type="hidden" id="endDate" value="<%= @endDate.strftime('%d/%m/%Y') %>" >
+    <form action="">
+      <div class="row">
+        <div class="col-lg-3">
+          <div class="form-group">
+            <%= label_tag(:dateRange, "Date Range:")%>
+            <%= text_field_tag(:dateRange, "test", class: 'form-control') %>
+          </div>
+        </div>
+      </div>
+      <a href="#" class="btn btn-success" id="SH_search_log" >Search</a>
+      <a href="#" class="btn btn-primary" id="SH_view_all_log">View All</a>
+    </form>
+
+    <table id="session_history_list" class="cell-border">
+      <thead>
+      <tr>
+        <th>Created At</th>
+        <th>Expired At</th>
+        <th>User ID</th>
+        <th>User Name</th>
+        <th>IP Address</th>
+        <th>Platform</th>
+        <th>Browser</th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+

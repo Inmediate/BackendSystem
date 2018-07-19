@@ -1,0 +1,30 @@
+<!--<h3>Manage User Accounts and Roles</h3>-->
+<table id="user_list" class="cell-border">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Name</th>
+    <th>E-mail Address</th>
+    <th>Role</th>
+    <th>Actvated</th>
+    <th>Edit</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @users.each_with_index do |user,index| %>
+    <tr>
+      <td><%= index + 1 %></td>
+      <td><%= user.name %></td>
+      <td><%= user.email %></td>
+      <td><%= user.role.type_name%></td>
+      <td><%= user.activation_status ? 'Activated' : 'Deactivated' %></td>
+      <td><% unless is_editor %><a href="/user/edit/<%= user.id %>"><i class="fas fa-edit"></i></a><% end %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% unless is_editor %>
+  <p class="m-t-10"><%= link_to 'Add New', user_new_path, class: 'btn btn-success' %></p>
+<% end%>
+
+

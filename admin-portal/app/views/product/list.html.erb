@@ -1,0 +1,36 @@
+<!--<h3>Manage Products</h3>-->
+<table id="product_list" class="cell-border <%= @product_pendings.blank? && @products.blank? ? nil : "css-serial" %>">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Product Name</th>
+    <th>Product Code</th>
+    <th>Activated</th>
+    <th>Edit</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @product_pendings.each do |pending| %>
+    <tr>
+      <td></td>
+      <td><%= fa_icon('exclamation-circle', type: :solid, style: "color:red;") %> <%= pending.parse_content['name'] %></td>
+      <td><%= pending.parse_content['code'] %></td>
+      <td><%= pending.parse_content['activation_status'] == 'true' ? 'Activated' : 'Deactivated' %></td>
+      <td><a href="/product/edit_pending/<%= pending.id %>"><%= fa_icon('edit', type: :solid) %></a></td>
+    </tr>
+  <% end %>
+  <% @products.each do |product| %>
+    <tr>
+      <td></td>
+      <td><%= Approval.where(table: 'PRODUCT').where(row_id: product.id).any? ? fa_icon('exclamation-circle', type: :solid, style: "color:red;") : nil %> <%= product.name %></td>
+      <td><%= product.code %></td>
+      <td><%= product.activation_status ? 'Activated' : 'Deactivated' %></td>
+      <td><a href="/product/edit/<%= product.id %>"><%= fa_icon('edit', type: :solid) %></a></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<p class="m-t-10"><%= link_to 'Add New', product_new_path, class: 'btn btn-success' %></p>
+
+
+

@@ -1,0 +1,23 @@
+<!--<h3>Manage Mappings > Edit Mapping</h3>-->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_for  @mapping, url: {action: "update_pending"}, html: { class: 'form' } do |f| %>
+      <div class="form-group">
+        <%= f.label :name do %>
+          Name: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :name, value: @mapping_pending["name"], class: 'form-control', required: true %>
+      </div>
+      <div class="form-group">
+        <%= f.label :list do %>
+          Values: <span>&#42;</span>
+        <% end %>
+        <p><em>Enter values separated with new line</em></p>
+        <%= f.text_area :list, value: @mapping_pending["list"], class: 'form-control', required: true, rows: 3 %>
+      </div>
+
+      <%= f.submit 'Save Changes', class: 'btn btn-success' %>
+      <%= link_to 'Cancel', mapping_list_path, class: 'btn btn-warning' %>
+    <% end %>
+  </div>
+</div>

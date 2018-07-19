@@ -1,0 +1,47 @@
+<!--<h3>Manage Insurers</h3>-->
+<table id="client_list" class="cell-border <%= @insurer_pendings.blank? && @insurers.blank? ? nil : "css-serial" %>">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Company Name</th>
+    <th>Company Code</th>
+    <th>Contact Person</th>
+    <th>Contact E-mail</th>
+    <th>Supported Products</th>
+    <th>Product APIs</th>
+    <th>Activated</th>
+    <th>Edit</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @insurer_pendings.each do |pending| %>
+    <tr>
+      <td ></td>
+      <td><%= fa_icon('exclamation-circle', type: :solid, style: "color:red;") %> <%= pending.parse_content['name'] %> <%= pending.parse_content['company_name'] %></td>
+      <td><%= pending.parse_content['company_code'] %></td>
+      <td><%= pending.parse_content['contact_person_name'] %></td>
+      <td><%= pending.parse_content['contact_person_email'] %></td>
+      <td><%= pending.insurer_supported_product %></td>
+      <td></td>
+      <td><%= pending.parse_content['activation_status'] == 'true' ? 'Activated' : 'Deactivated' %></td>
+      <td><a href="/insurer/edit_pending/<%= pending.id %>"><%= fa_icon('edit', type: :solid) %></a></td>
+    </tr>
+  <% end %>
+  <% @insurers.each do |insurer| %>
+    <tr>
+      <td ></td>
+      <td><%= Approval.where(table: 'INSURER').where(row_id: insurer.id).any? ? fa_icon('exclamation-circle', type: :solid, style: "color:red;") : nil %> <%= insurer.company_name %></td>
+      <td><%= insurer.company_code %></td>
+      <td><%= insurer.contact_person_name %></td>
+      <td><%= insurer.contact_person_email %></td>
+      <td><%= insurer.supported_products %></td>
+      <td style="white-space: pre-wrap;" ><%= insurer.api_list %></td>
+      <td><%= insurer.activation_status ? 'Activated' : 'Deactivated' %></td>
+      <td><a href="/insurer/edit/<%= insurer.id %>"><%= fa_icon('edit', type: :solid) %></a></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<p class="m-t-10"><%= link_to 'Add New', insurer_new_path, class: 'btn btn-success' %></p>
+
+

@@ -1,0 +1,21 @@
+<p>Hello <%= @receiver.name %>,</p>
+<p>The following changes are pending approval:</p>
+<% @approvals.each_with_index do |approval, index| %>
+  <% editor = User.where(approval.user).any? ? User.where(approval.user).first.name : 'N/A' %>
+  <% action = approval.row_id.blank? ? 'created' : 'updated'%>
+  <% model = approval.table.tr('_', ' ').split.map(&:capitalize).join(' ') %>
+  <% content = '' %>
+  <% if action == 'updated' %>
+    <%if approval.table == 'INSURER' %>
+      <% content = " - #{JSON.parse(approval.content)['company_name']}" %>
+    <%elsif approval.table == 'INSURER_PRODUCT_API'%>
+      <% content = " - #{JSON.parse(approval.content)['api_method']} #{JSON.parse(approval.content)['api_url']}" %>
+    <%  else %>
+      <% content = " - #{JSON.parse(approval.content)['name']}" %>
+    <% end %>
+  <% end %>
+  <% timestamp = approval.created_at.strftime('%d/%m/%Y %H:%M') %>
+
+  <p class="tab"><%= index + 1 %>. User <%= editor %> has <%= action %> <%= model %><%= content %> at <%= timestamp %>.</p>
+<% end %>
+<p>Please sign-in to the admin portal to approve or reject the changes.</p>

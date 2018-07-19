@@ -1,0 +1,32 @@
+<!--<h3>Manage Mapping</h3>-->
+<table id="client_list" class="cell-border <%= @mapping_pendings.blank? && @mappings.blank? ? nil : "css-serial" %>">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th width="70%" >Name</th>
+    <th># of Items</th>
+    <th>Edit</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @mapping_pendings.each do |pending| %>
+    <tr>
+      <td ></td>
+      <td><%= fa_icon('exclamation-circle', type: :solid, style: "color:red;") %> <%= pending.parse_content['name'] %></td>
+      <td><%= pending.mapping_count_list %></td>
+      <td><a href="/mapping/edit_pending/<%= pending.id %>"><%= fa_icon('edit', type: :solid) %></td>
+    </tr>
+  <% end %>
+  <% @mappings.each_with_index do |map,index| %>
+    <tr>
+      <td ></td>
+      <td><%=  Approval.where(table: 'MAPPING').where(row_id: map.id).any? ? fa_icon('exclamation-circle', type: :solid, style: "color:red;") : nil %> <%= map.name %></td>
+      <td><%= map.count_item %></td>
+      <td><a href="/mapping/edit/<%= map.id %>"><%= fa_icon('edit', type: :solid) %></a></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<p class="m-t-10"><%= link_to 'Add New', mapping_new_path, class: 'btn btn-success' %></p>
+
+

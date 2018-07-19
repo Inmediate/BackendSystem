@@ -1,0 +1,6 @@
+<% if controller_name == 'main' && controller.action_name == 'index' %>
+<% else %>
+    <ol class="breadcrumb">
+      <%= render_breadcrumbs :tag => :li, :separator => '' %>
+    </ol>
+<% end %>

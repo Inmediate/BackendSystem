@@ -1,0 +1,21 @@
+<!--<h3>Manage Insurers > Edit Insurer > Clone A Mapping</h3>-->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_tag("/insurer/#{@insurer.id}/mapping/create", {class:'form'}) do %>
+      <div class="form-group">
+        <h5>STEP 1:</h5>
+        <label for="#">Please Select a Mapping to Clone</label>
+        <select class="form-control" name="mapping">
+          <% Mapping.where(status: true).each do |map| %>
+            <% unless @insurer_mapping_id_array.include?(map.id) %>
+              <option value="<%= map.id %>"><%= map.name %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+      <%= submit_tag('Submit', {class:'btn btn-success'}) %>
+      <%= link_to 'Cancel', "/insurer/edit/#{@insurer.id}", class: 'btn btn-warning' %>
+    <% end %>
+  </div>
+</div>
+

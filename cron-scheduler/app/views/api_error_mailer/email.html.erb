@@ -1,0 +1,9 @@
+<p>Hello <%= @receiver.contact_person_name %>,</p>
+<p>Error on requesting the following Insurer API: </p>
+<p class="tab">(1) Company Name: <%= @receiver.company_name %> </p>
+<p class="tab">(2) Endpoint: <%= @insurer_api.api_method %> <%= @insurer_api.api_url %></p>
+<p class="tab">(3) Request Body/Parameters: <%= @request_body %></p>
+<p class="tab">(4) Reason: <%= @reason %> </p>
+<p class="tab">(5) Response Code: <%= @response_code %> </p>
+<p class="tab">(6) Response Body: <%= @response_body %> </p>
+<p>Note - this occurs during updating/creating payload response in Cache Table</p>

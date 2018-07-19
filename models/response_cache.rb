@@ -1,0 +1,2 @@
+class ResponseCache < ApplicationRecord
+end

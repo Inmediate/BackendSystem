@@ -1,0 +1,56 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <input type="hidden" id="startDate" value="<%= @startDate.strftime('%d/%m/%Y') %>" >
+    <input type="hidden" id="endDate" value="<%= @endDate.strftime('%d/%m/%Y') %>" >
+    <form action="">
+      <div class="row">
+        <div class="col-lg-3">
+          <div class="form-group">
+            <%= label_tag(:dateRange, "Date Range:")%>
+            <%= text_field_tag(:dateRange, "", class: 'form-control') %>
+          </div>
+        </div>
+      </div>
+      <a href="#" class="btn btn-success" id="IPA_search_log" >Search</a>
+      <a href="#" class="btn btn-primary" id="IPA_view_all_log">View All</a>
+    </form>
+
+    <table id="log_product_api_list" class="cell-border table-hover log_table">
+      <thead>
+      <tr>
+        <th style="width: 100px;" >Timestamp</th>
+        <th>API ID</th>
+        <th style="width: 250px;">Request ID</th>
+        <th>Source</th>
+        <th>Request URL</th>
+        <th>Request Method</th>
+        <th>Response Code</th>
+        <th style="visibility: hidden" >Request Payload</th>
+        <th style="visibility: hidden" >Response Payload</th>
+      </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="ipa_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Payloads</h4>
+      </div>
+      <div class="modal-body">
+        <h5>Request Payload</h5>
+        <pre id="rq_payload"></pre>
+
+        <h5>Response Payload</h5>
+        <pre id="rp_payload"></pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+

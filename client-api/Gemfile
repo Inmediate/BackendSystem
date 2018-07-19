@@ -1,0 +1,45 @@
+source 'https://rubygems.org'
+
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
+gem "audited", "~> 4.6"
+gem 'delayed_job_active_record'
+gem 'rails', '~> 5.1.4'
+gem 'redis-rails'
+gem 'minidusen'
+gem 'to_regexp', '~> 0.2.1'
+gem 'mysql2', '>= 0.3.18', '< 0.5'
+gem 'puma', '~> 3.7'
+gem 'jbuilder', '~> 2.5'
+gem 'bcrypt', '~> 3.1.7'
+gem 'nokogiri', '~> 1.8'
+gem 'hashie', '~> 3.5', '>= 3.5.7'
+gem 'parallel'
+gem 'ruby-progressbar'
+gem 'httparty', '~> 0.16.1'
+gem 'daemons'
+
+group :development, :test do
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'rspec-rails', '~> 3.7'
+  gem 'factory_bot_rails'
+  gem 'mock_redis'
+end
+
+group :development do
+  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
+
+  gem 'capistrano'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+  gem 'capistrano-rbenv'
+  gem 'capistrano3-delayed-job'
+end
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

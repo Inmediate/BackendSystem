@@ -1,0 +1,122 @@
+<!--<h3>Manage Client APIs > Edit Client API</h3>-->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_for  @api, url: {action: "update_pending"}, html: { class: 'form' } do |f| %>
+
+      <div class="form-group ">
+        <%= f.label :name do %>
+          Client API Name: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :name, value: @api_pending["name"], class: 'form-control', required: true %>
+      </div>
+
+      <div class="form-group  ">
+        <%= f.label :product do %>
+          Product ID: <span>&#42;</span>
+        <% end %>
+        <%= f.collection_select :product_id, Product.where(activation_status: true).where(status: true), :id, :code, { selected: @api_pending["product_id"] }, class: 'form-control', required: true %>
+      </div>
+
+      <div class="form-group ">
+        <%= f.label :path do %>
+          Path Name: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :path, value: @api_pending["path"], class: 'form-control', required: true %>
+      </div>
+
+      <div class="form-group ">
+        <%= f.label :derived_from, 'Derived From' %>
+        <%= f.text_field :derived_from, value: @api_pending["derived_from"], class: 'form-control' %>
+      </div>
+
+      <div class="form-group  ">
+        <%= f.label :method do %>
+          Method: <span>&#42;</span>
+        <% end %>
+        <%= f.select :method, options_for_select([%w[GET GET], %w[POST POST], %w[PUT PUT], %w[PATCH PATCH], %w[DELETE DELETE], %w[HEAD HEAD], %w[OPTIONS OPTIONS]], { selected:  @api_pending["method"] }), {}, class: 'form-control', required: true %>
+      </div>
+
+      <div class="form-group ">
+        <%= f.label :authorization, 'Require Authorization' %><br>
+        <%= f.check_box :authorization, checked: @api_pending['authorization'] == '1' ? true : false %>
+        Check if yes
+      </div>
+
+      <div class="form-group ">
+        <%= f.label :validation, 'Require Validation' %><br>
+        <%= f.check_box :validation, checked: @api_pending['validation'] == '1' ? true : false %>
+        Check if yes
+      </div>
+
+
+      <div class="form-group" >
+        <%= f.label :payload, 'Payload' %><br>
+        <table class="table table-bordered" id="row_payload">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Key Name</th>
+            <th>Validation</th>
+            <th>Mandatory</th>
+            <th>Enable Validation</th>
+            <th>Is Array?</th>
+            <th>Belongs to array block</th>
+            <th>Description</th>
+            <th>Remove</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% if action_name == 'update_pending' %>
+            <% params[:client_api]['payloads'].each_with_index do |payload, index| %>
+              <tr>
+                <td><%= index + 1%></td>
+                <td><input type="text" class="form-control" name="client_api[payloads][][key_name]" value="<%= payload['key_name']%>" ></td>
+                <td><input type="text" class="form-control" name="client_api[payloads][][validation]" value="<%= payload['validation']%>" ></td>
+                <td><input type="checkbox" value="true" name="client_api[payloads][][mandatory]" <%= payload['mandatory'] ? 'checked="checked"'.html_safe : nil %> ></td>
+                <td><input type="checkbox" value="true" name="client_api[payloads][][enable_validation]" <%= payload['enable_validation'] ? 'checked="checked"'.html_safe : nil %> ></td>
+                <td><input type="checkbox" value="true" name="client_api[payloads][][is_array]" <%= payload['is_array'] ? 'checked="checked"'.html_safe : nil %> ></td>
+                <td><input type="text" class="form-control" name="client_api[payloads][][parent_array]" value="<%= payload['parent_array']%>"  ></td>
+                <td><input type="text" class="form-control" name="client_api[payloads][][description]" value="<%= payload['description']%>" ></td>
+                <td><a id="remove_payload" type="button" class="btn btn-danger">remove</a></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <% @payload_pending.each_with_index do |payload, index| %>
+              <tr>
+                <td><%= index + 1%></td>
+                <td><input type="text" class="form-control" name="client_api[payloads][][key_name]" value="<%= payload['key_name']%>" ></td>
+                <td><input type="text" class="form-control" name="client_api[payloads][][validation]" value="<%= payload['validation']%>" ></td>
+                <td><input type="checkbox" value="true" name="client_api[payloads][][mandatory]" <%= payload['mandatory'] ? 'checked="checked"'.html_safe : nil %> ></td>
+                <td><input type="checkbox" value="true" name="client_api[payloads][][enable_validation]" <%= payload['enable_validation'] ? 'checked="checked"'.html_safe : nil %> ></td>
+                <td><input type="checkbox" value="true" name="client_api[payloads][][is_array]" <%= payload['is_array'] ? 'checked="checked"'.html_safe : nil %> ></td>
+                <td><input type="text" class="form-control" name="client_api[payloads][][parent_array]" value="<%= payload['parent_array']%>"  ></td>
+                <td><input type="text" class="form-control" name="client_api[payloads][][description]" value="<%= payload['description']%>" ></td>
+                <td><a id="remove_payload" type="button" class="btn btn-danger">remove</a></td>
+              </tr>
+            <% end %>
+          <% end %>
+          </tbody>
+
+          <div>NOTE: <strong>insurer_company_code</strong> is reserved Key Name. Use only to defined specific insurer.</div>
+
+        </table>
+
+        <a class="btn btn-primary add-payload" id="add_payload">Add a Payload</a>
+
+      </div>
+
+
+      <input type="hidden" id="payload_count" value="0"/>
+
+      <div class="form-group ">
+        <%= f.label :activation_status, 'Activated' %>
+        <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected: @api_pending["activation_status"]  }), {}, class: 'form-control', disabled: !can_approve_reject_deactivate  %>
+      </div>
+
+      <%= f.submit action_name == 'new' ? 'Submit' : 'Save Changes', class: 'btn btn-success' %>
+
+      <%= link_to 'Cancel', client_api_list_path, class: 'btn btn-warning' %>
+    <% end %>
+
+  </div>
+</div>

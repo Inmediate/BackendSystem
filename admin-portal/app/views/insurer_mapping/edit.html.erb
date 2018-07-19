@@ -1,0 +1,33 @@
+<!--<h3>Manage Insurers > Edit Insurer > Clone A Mapping</h3>-->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_tag("/insurer/#{@insurer.id}/mapping/update/#{@id}", {class:'form'}) do %>
+      <div class="form-group">
+        <h5>STEP 2:</h5>
+        <label for="#">Please fill in the Mapped Value for <em><%= @mapping_name %></em></label>
+        <table  class="table table-bordered">
+          <thead >
+            <tr class="active">
+              <th>#</th>
+              <th>Mapped Master</th>
+              <th>Mapped Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @mapping.each_with_index do |map, index| %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><input type="text" value="<%= map.strip %>" disabled="true" class="form-control"></td>
+                <td><input type="text" name="mapping[value][]" value="<%= @mapping_hash['value'][index] %>" class="form-control"></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <%= submit_tag('Submit', {class:'btn btn-success'}) %>
+      <%= link_to 'Cancel', "/insurer/edit/#{@insurer.id}", class: 'btn btn-warning' %>
+    <% end %>
+    <p class='delete-button'><a href ="/insurer/<%= @insurer.id %>/mapping/delete/<%= @id %>" class="btn btn-danger" >Delete this Clone Mapping</a></p>
+  </div>
+</div>
+

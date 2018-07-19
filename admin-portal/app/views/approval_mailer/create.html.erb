@@ -1,0 +1,6 @@
+<p>Hello <%= @user.name %>,</p>
+<% if @action == 'updated'%>
+  <p>User <%= @editor %> has updated <%= @model %> <i><%= @content %></i>. Please sign in to review and approve the changes.</p>
+<% else %>
+  <p>User <%= @editor %> has created new <%= @model %>. Please sign in to review and approve the changes.</p>
+<% end %>

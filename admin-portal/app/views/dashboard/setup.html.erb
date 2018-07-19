@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="col-md-8 col-md-offset-2">
+    <div><%= flash_messages %></div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Super Administrator Setup</h3>
+      </div>
+      <div class="panel-body">
+        <%= form_tag(setup_submit_path, {class:'form'}) do %>
+          <div class="form-group">
+            <%= label_tag :name do %>
+              Name: <span>&#42;</span>
+            <% end %>
+            <%= text_field_tag(:name, nil, class: 'form-control', placeholder: "", required: true, autofocus: true ) %>
+          </div>
+          <div class="form-group">
+            <%= label_tag :email do %>
+              Email Address: <span>&#42;</span>
+            <% end %>
+            <%= email_field_tag(:email, nil, class: 'form-control', placeholder: "", required: true) %>
+          </div>
+          <div class="form-group">
+            <%= label_tag :password do %>
+              Password: <span>&#42;</span>
+            <% end %>
+            <%= password_field_tag(:password, nil, class: 'form-control', placeholder: "", required: true ) %>
+          </div>
+          <div class="form-group">
+            <%= label_tag :repeat_password do %>
+              Repeat Password: <span>&#42;</span>
+            <% end %>
+            <%= password_field_tag(:repeat_password, nil, class: 'form-control', placeholder: "", required: true ) %>
+          </div>
+          <%= submit_tag("Save", class: 'btn btn-default') %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

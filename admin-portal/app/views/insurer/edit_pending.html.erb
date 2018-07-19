@@ -1,0 +1,91 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_for  @insurer, url: {action: "update_pending"}, html: { class: 'form' } do |f| %>
+      <div class="form-group">
+        <%= f.label :company_name do %>
+          Company Name: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :company_name, value: action_name == 'update_pending' ? @insurer.company_name : @insurer_pending["company_name"], class: 'form-control', required: true %>
+      </div>
+      <div class="form-group ">
+        <%= f.label :company_address, 'Company Address:' %>
+        <%= f.text_area :company_address, value: action_name == 'update_pending' ? @insurer.company_address : @insurer_pending["company_address"], class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :company_phone, 'Company Phone:' %>
+        <%= f.text_field :company_phone, value: action_name == 'update_pending' ? @insurer.company_phone : @insurer_pending["company_phone"], class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :website_url, 'Company Website:' %>
+        <%= f.text_field :website_url, value: action_name == 'update_pending' ? @insurer.website_url : @insurer_pending["website_url"], class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :contact_person_name do %>
+          Contact Person Name: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :contact_person_name, value: action_name == 'update_pending' ? @insurer.contact_person_name : @insurer_pending["contact_person_name"], class: 'form-control', required: true %>
+      </div>
+      <div class="form-group">
+        <%= f.label :contact_person_email do %>
+          Contact Person E-mail: <span>&#42;</span>
+        <% end %>
+        <input type="email" class="form-control" name="insurer[contact_person_email]" id="insurer_contact_person_email" required="required" value="<%= action_name == 'update_pending' ? @insurer.contact_person_email :  @insurer_pending["contact_person_email"] %>" multiple >
+      </div>
+      <div class="form-group">
+        <%= f.label :contact_person_phone, 'Contact Person Phone:' %>
+        <%= f.text_field :contact_person_phone, value: action_name == 'update_pending' ? @insurer.contact_person_phone : @insurer_pending["contact_person_phone"], class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :company_code do %>
+          Company Code: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :company_code, value: action_name == 'update_pending' ? @insurer.company_code : @insurer_pending["company_code"], class: 'form-control', required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :product, 'Supported Products:' %>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <% Product.where(status: true).where(activation_status: true).each do |product| %>
+              <% if action_name == 'update_pending' %>
+                <input type="checkbox" value="<%= product.id %>" name="insurer[products][]"  <%= params[:insurer]['products'].include?(product.id.to_s) ? 'checked' : nil %> >
+              <% else %>
+                <input type="checkbox" value="<%= product.id %>" name="insurer[products][]"  <%= @product_pending.include?(product.id.to_s) ? 'checked' : nil %> >
+              <% end %>
+              <%= f.label :products, product.name %><br>
+            <% end %>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <%= f.label :product_api, 'Insurer Product APIs:' %>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <p><em>This cannot be created until this insurer is activated</em></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :mapping, 'Mapping List:' %>
+        <%= f.hidden_field :mapping, value: @insurer_pending["mapping"]%>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <p><em>This cannot be created until this insurer is activated</em></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group ">
+        <%= f.label :activation_status, 'Activated' %>
+        <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected: action_name == 'update_pending' ? @insurer.activation_status : @insurer_pending["activation_status"]  }), {}, class: 'form-control', disabled: !can_approve_reject_deactivate  %>
+      </div>
+
+      <%= f.submit action_name == 'new' ? 'Submit' : 'Save Changes', class: 'btn btn-success' %>
+
+      <%= link_to 'Cancel', insurer_list_path, class: 'btn btn-warning' %>
+    <% end %>
+  </div>
+</div>

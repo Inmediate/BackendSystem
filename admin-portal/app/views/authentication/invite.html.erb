@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="col-md-8 col-md-offset-2">
+    <div><%= flash_messages %></div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Create Account</h3>
+      </div>
+      <div class="panel-body">
+        <%= form_tag(invite_submit_path, {class:'form'}) do %>
+          <%= hidden_field_tag(:token, @user.invitation_token, class: 'form-control', required: true ) %>
+          <div class="form-group">
+            <%= label_tag :name do %>
+              Name: <span>&#42;</span>
+            <% end %>
+            <%= text_field_tag(:name, @user.name, class: 'form-control', placeholder: "", required: true ) %>
+          </div>
+          <div class="form-group">
+            <%= label_tag :email do %>
+              E-mail Address: <span>&#42;</span>
+            <% end %>
+            <%= text_field_tag(:email, @user.email, class: 'form-control', disabled: true) %>
+          </div>
+          <div class="form-group">
+            <%= label_tag :password do %>
+              New Password: <span>&#42;</span>
+            <% end %>
+            <%= password_field_tag(:password, nil, class: 'form-control', placeholder: "", required: true ) %>
+          </div>
+          <div class="form-group">
+            <%= label_tag :repeat_password do %>
+              Repeat Password: <span>&#42;</span>
+            <% end %>
+            <%= password_field_tag(:repeat_password, nil, class: 'form-control', placeholder: "", required: true ) %>
+          </div>
+          <%= submit_tag("Save", class: 'btn btn-default') %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

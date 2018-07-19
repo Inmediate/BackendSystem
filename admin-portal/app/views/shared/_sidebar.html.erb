@@ -1,0 +1,16 @@
+<ul class="nav nav-sidebar">
+  <li <%= controller_name == 'insurer' || controller_name == 'insurer_product_api' || controller_name == 'insurer_mapping' ? 'class="active"'.html_safe : nil %> ><%= link_to 'Insurers', insurer_list_path %></li>
+  <li <%= controller_name == 'client' ? 'class="active"'.html_safe : nil %> ><%= link_to 'Clients', client_list_path %></li>
+  <li <%= controller_name == 'client_api' ? 'class="active"'.html_safe : nil %> ><%= link_to 'Client APIs', client_api_list_path %></li>
+  <li <%= controller_name == 'product' ? 'class="active"'.html_safe : nil %> ><%= link_to 'Products', product_list_path %></li>
+  <li <%= controller_name == 'mapping' ? 'class="active"'.html_safe : nil %> ><%= link_to 'Mapping', mapping_list_path %></li>
+  <li <%= controller_name == 'log' ? 'class="active"'.html_safe : nil %> ><%= link_to 'Reports', log_product_api_path %></li>
+  <% if controller_name == 'log' %>
+    <li <%= action_name == 'product_api' ? 'class="active"'.html_safe : nil %> ><%= link_to '<span class="sub_title" >By Insurer Product API</span>'.html_safe, log_product_api_path %></li>
+    <li <%= action_name == 'client_api' ? 'class="active"'.html_safe : nil %> ><%= link_to '<span class="sub_title" >By Client API</span>'.html_safe, log_client_api_path %></li>
+    <li <%= action_name == 'approval' ? 'class="active"'.html_safe : nil %> ><%= link_to '<span class="sub_title" >By Approval</span>'.html_safe, log_approval_path %></li>
+    <li <%= action_name == 'session_history' ? 'class="active"'.html_safe : nil %> ><%= link_to '<span class="sub_title" >By Session History</span>'.html_safe, log_session_history_path %></li>
+  <% end %>
+  <li <%= controller_name == 'user' ? 'class="active"'.html_safe : nil %> ><%= link_to 'User Accounts', user_list_path %></li>
+  <li <%= controller_name == 'dashboard' && action_name == 'setting' ? 'class="active"'.html_safe : nil %> ><%= link_to 'Setting', setting_path %></li>
+</ul>

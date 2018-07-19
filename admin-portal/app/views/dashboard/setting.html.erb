@@ -1,0 +1,21 @@
+<!--<h3>Global Setting</h3>-->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_tag(setting_submit_path, {class:'form'}) do %>
+      <div class="form-group">
+        <%= label_tag :session_timeout, "Session Timeout (Minutes)" %>
+        <p><em><%= @session_timeout_purpose %></em></p>
+        <%= text_field_tag(:session_timeout, @session_timeout, class: 'form-control') %>
+      </div>
+      <div class="form-group">
+        <%= label_tag :api_url, 'API Server URL:' %>
+        <p><em><%= @api_server_url_purpose %></em></p>
+        <%= text_field_tag(:api_url, @api_server_url, class: 'form-control') %>
+      </div>
+
+      <%= submit_tag("Save Changes", class: 'btn btn-success') %>
+      <%= link_to 'Cancel', root_path, class: 'btn btn-warning' %>
+    <% end %>
+
+  </div>
+</div>

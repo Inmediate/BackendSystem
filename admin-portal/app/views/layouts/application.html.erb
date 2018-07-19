@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Insurance Market API System</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <%= favicon_link_tag asset_path('insurance-market-favicon.png'), :rel => 'icon', :type =>  'image/png' %>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="main-body">
+    <% if controller_name == 'authentication' || (controller_name == 'dashboard' && action_name == 'setup') %>
+     <%= yield %>
+    <% else %>
+    <%=  render 'shared/nav' %>
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-3 col-md-2 sidebar">
+            <%=  render 'shared/sidebar' %>
+          </div>
+          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div><%= flash_messages %></div>
+            <%=  render 'shared/breadcrumb' %>
+            <%= yield %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </body>
+
+</html>

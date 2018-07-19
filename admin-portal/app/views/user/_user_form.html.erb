@@ -1,0 +1,51 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_for  @user, url: {action: action_name == 'new' ? 'create' : 'update'}, html: { class: 'form' } do |f| %>
+      <div class="form-group">
+        <%= f.label :name do %>
+          Name: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :name, class: 'form-control', required: true %>
+      </div>
+      <div class="form-group">
+        <%= f.label :email do %>
+          E-mail Address: <span>&#42;</span>
+        <% end %>
+        <% if action_name == 'new' %>
+          <%= f.email_field :email, class: 'form-control', required: true %>
+        <% else %>
+          <%= f.email_field :email, class: 'form-control', required: true, disabled: true %>
+      <% end %>
+      </div>
+      <div class="form-group">
+        <%= f.label :role do %>
+          Role: <span>&#42;</span>
+        <% end %>
+        <% if action_name != 'new' &&  @user.role.id == 1 %>
+            <input type="text" value="Super Administrator" class="form-control" disabled="true">
+        <% else %>
+          <%= f.collection_select :role_id, Role.where.not(id: 1), :id, :type_name, { selected: @user.role }, class: 'form-control', disabled: current_user == @user ? true : false %>
+         <% end %>
+      </div>
+
+      <% unless action_name == 'new' %>
+        <div class="form-group">
+          <%= f.label :activation_status, 'Activated' %>
+          <% if @user.accept_invitation %>
+            <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected: @user.activation_status }), {}, class: 'form-control', disabled: current_user == @user || @user.role.id == 1 %>
+          <% else%>
+            <p><em>User have yet to activate the account.</em></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= f.submit action_name == 'new' ? 'Create & Send Invite' : 'Save Changes', class: 'btn btn-success' %>
+
+      <%= link_to 'Cancel', user_list_path, class: 'btn btn-warning' %>
+    <% end %>
+
+    <% if action_name == 'edit' && is_super_admin && @user.role.id != 1 %>
+      <p class='delete-button'><a href = "/user/delete/<%= @user.id %>" class="btn btn-danger" >Delete this account</a></p>
+    <% end %>
+  </div>
+</div>

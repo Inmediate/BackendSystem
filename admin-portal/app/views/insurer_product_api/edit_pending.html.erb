@@ -1,0 +1,480 @@
+<!--<h3>Manage Insurers > Edit Insurer > Edit Product API</h3>-->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_for  @api, url: {action: "update_pending"}, html: { class: 'form' } do |f| %>
+
+      <%= f.hidden_field :insurer_id, value: @insurer.id%>
+
+      <div class="form-group">
+        <%= f.label :is_authentication, 'Is this an Authentication API?' %><br>
+        <%= f.check_box :is_authentication, id:"is_auth", checked: @pending_is_auth_api %>
+        Check if yes
+      </div>
+
+      <div class="form-group">
+        <%= f.label :auth_token_key_name, 'Authentication Token Key Name' %>
+        <p><em>Required field if this is an Authentication API</em></p>
+        <%= f.text_field :auth_token_key_name, value: action_name == 'update_pending' ? @api['auth_token_key_name'] : @api_pending["auth_token_key_name"], class: 'form-control', id: "auth_token_key_name", required: false %>
+      </div>
+
+      <div class="form-group ">
+        <%= f.label :client_api_id, 'Client API Mapping' %>
+        <p><em>Not required if this is an Authentication API</em></p>
+        <%= f.collection_select :client_api_id, ClientApi.where(status: true).where(activation_status: true), :id, :name, {prompt: '', selected: action_name == 'update_pending' ? @api['client_api_id'] : @api_pending["client_api_id"]  }, class: 'form-control', required: !@pending_is_auth_api, disabled: @pending_is_auth_api %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :cache_policy, 'Cache Policy' %>
+        <%= f.select :cache_policy, options_for_select([%w[Live Live], %w[Database Database]], { selected: action_name == 'update_pending' ? @api['cache_policy'] : @api_pending["cache_policy"] }), {}, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :cache_timeout, 'Cache Timeout (Hours)' %>
+        <%= f.number_field :cache_timeout, value: action_name == 'update_pending' ? @api['cache_timeout'] : @api_pending["cache_timeout"], class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :api_url do %>
+          API URL: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :api_url, value: action_name == 'update_pending' ? @api['api_url'] : @api_pending["api_url"], class: 'form-control', required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :api_method do %>
+          Method: <span>&#42;</span>
+        <% end %>
+        <%= f.select :api_method, options_for_select([%w[GET GET], %w[POST POST], %w[PUT PUT], %w[PATCH PATCH], %w[DELETE DELETE]], { selected: action_name == 'update_pending' ? @api['api_method'] : @api_pending["api_method"] }), {}, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :api_flavour do %>
+          API Flavor: <span>&#42;</span>
+        <% end %>
+        <%= f.select :api_flavour, options_for_select([ ['Type 1 (No authentication)', 'Type 1'], ['Type 2 (Pre-shared authentication)', 'Type 2'], ['Type 3 (Via authentication API)', 'Type 3']], { selected: action_name == 'update_pending' ? @api['api_flavour'] : @api_pending["api_flavour"] }), {}, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :auth_scheme_name, 'Authentication Scheme Name' %>
+        <p><em>Required if API Flavor is Type 2 or Type 3</em></p>
+        <%= f.text_field :auth_scheme_name, value: action_name == 'update_pending' ? @api['auth_scheme_name'] : @api_pending["auth_scheme_name"], class: 'form-control', required: action_name == 'update_pending' ? @api['api_flavour'] != 'Type 1' : @api_pending["api_flavour"] != 'Type 1', disabled: action_name == 'update_pending' ? @api['api_flavour'] == 'Type 1' : @api_pending["api_flavour"] == 'Type 1' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :credential, 'Pre-Shared Credential' %>
+        <p><em>Required if API Flavor is Type 2</em></p>
+        <%= f.text_field :credential, value: action_name == 'update_pending' ? @api['credential'] : @api_pending["credential"], class: 'form-control', required: action_name == 'update_pending' ? @api['api_flavour'] == 'Type 2' : @api_pending["api_flavour"] == 'Type 2', disabled: action_name == 'update_pending' ? @api['api_flavour'] != 'Type 2' : @api_pending["api_flavour"] != 'Type 2' %>
+      </div>
+
+      <div class="form-group ">
+        <%= f.label :auth_api, 'Authentication API' %>
+        <p><em>Required if API Flavor is Type 3</em></p>
+        <%= f.collection_select :auth_api, @insurer.insurer_product_apis.where(status: true).where(activation_status: true).where(is_authentication: true), :id, :selection_name, {prompt: '', selected: action_name == 'update_pending' ? @api['auth_api'] : @api_pending["auth_api"] }, class: 'form-control', required: action_name == 'update_pending' ? @api['api_flavour'] == 'Type 3' : @api_pending["api_flavour"] == 'Type 3', disabled: action_name == 'update_pending' ? @api['api_flavour'] != 'Type 3' : @api_pending["api_flavour"] != 'Type 3' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :payload_type do %>
+          Payload Type: <span>&#42;</span>
+        <% end %>
+        <%= f.select :payload_type, options_for_select([%w[JSON JSON], %w[XML XML]], { selected: action_name == 'update_pending' ? @api['payload_type'] : @api_pending["payload_type"] }), {}, class: 'form-control' %>
+      </div>
+
+      <input type="hidden" value="<%= @insurer_mapping_id_array%>" id="insurer_mapping_id_array">
+      <input type="hidden" value="<%= @insurer_mapping_name_array%>" id="insurer_mapping_name_array">
+
+      <div class="form-group">
+        <%= f.label :payload, 'Payload' %>
+        <%= f.text_area :payload, value: action_name == 'update_pending' ? @api['payload'] : @api_pending["payload"], class: 'form-control', rows: "15" %>
+      </div>
+
+      <div class="form-group" >
+        <%= f.label :payload_validation, 'Payload Validation' %>
+        <table  class="table table-bordered" id="row_payload_validation">
+          <thead >
+          <tr class="active">
+            <th>#</th>
+            <th>Variable Name <span>&#42;</span></th>
+            <th>Key Name Reference</th>
+            <th>Validation</th>
+            <th>Clone Mapping</th>
+            <th>Mandatory?</th>
+            <th>Enable Validation?</th>
+            <th>Encrypted?</th>
+            <th>Is Array?</th>
+            <th>Belongs to Array Block</th>
+            <th>Description</th>
+            <th>Edit</th>
+          </tr>
+          </thead>
+          <tbody>
+            <% if action_name == 'update_pending' && !params[:insurer_product_api]['payload_validation'].nil? %>
+              <% params[:insurer_product_api]['payload_validation'].each_with_index do |payload_validation, index|%>
+                <% position = index + 1%>
+                <tr id="<%= position %>">
+                  <td><%= position %></td>
+                  <td id="row_payload_name_<%= position %>"><%= payload_validation['name'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][name]" id="payload_name_<%= position %>" value="<%= payload_validation['name'] %>">
+                  <td id="row_payload_ref_name_<%= position %>" ><%= payload_validation['ref_name'] %></td>
+                  <input type="hidden"  name="insurer_product_api[payload_validation][][ref_name]" id="payload_ref_name_<%= position %>" value="<%= payload_validation['ref_name'] %>">
+                  <td style="white-space: pre-wrap;" id="row_payload_validation_<%= position %>" ><%= payload_validation['validation'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][validation]" id="payload_validation_<%= position %>" value="<%= payload_validation['validation'] %>">
+                  <td id="row_payload_mapping_<%= position %>" ><%= payload_validation['mapping'].blank? ? nil : Mapping.find(payload_validation['mapping']).name %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][mapping]"  id="payload_mapping_id_<%= position %>" value="<%= payload_validation['mapping'] %>" >
+                  <td id="row_payload_mandatory_<%= position %>" style="color: <%= payload_validation['mandatory'] == 'true' ? '#5cb85c' : '#d9534f' %>;" ><%= payload_validation['mandatory'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][mandatory]"  id="payload_mandatory_<%= position %>" value="<%= payload_validation['mandatory'] %>" >
+                  <td id="row_payload_enable_validation_<%= position %>" style="color: <%= payload_validation['enable_validation'] == 'true' ? '#5cb85c' : '#d9534f' %>;" ><%= payload_validation['enable_validation'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][enable_validation]"  id="payload_enable_validation_<%= position %>" value="<%= payload_validation['enable_validation'] %>" >
+                  <td id="row_payload_encrypted_<%= position %>" style="color: <%= payload_validation['encrypted'] == 'true' ? '#5cb85c' : '#d9534f' %>;" ><%= payload_validation['encrypted'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][encrypted]"  id="payload_encrypted_<%= position %>" value="<%= payload_validation['encrypted'] %>" >
+                  <td id="row_payload_is_array_<%= position %>" style="color: <%= payload_validation['is_array'] == 'true' ? '#5cb85c' : '#d9534f' %>;" ><%= payload_validation['is_array'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][is_array]"  id="payload_is_array_<%= position %>" value="<%= payload_validation['is_array'] %>" >
+                  <td id="row_payload_parent_array_<%= position %>" ><%= payload_validation['parent_array'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][parent_array]"  id="payload_parent_array_<%= position %>" value="<%= payload_validation['parent_array'] %>" >
+                  <td id="row_payload_description_<%= position %>" ><%= payload_validation['description'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][description]"  id="payload_description_<%= position %>" value="<%= payload_validation['description'] %>" >
+                  <td><a href="#" id="edit_payload_validation" data-toggle="modal" data-target="#<%= position %>_modal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
+                </tr>
+              <% end %>
+            <% else %>
+              <% @payload_validation_pending.each_with_index do |payload_validation, index|%>
+                <% position = index + 1%>
+                <tr id="<%= position %>">
+                  <td><%= position %></td>
+                  <td id="row_payload_name_<%= position %>"><%= payload_validation['name'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][name]" id="payload_name_<%= position %>" value="<%= payload_validation['name'] %>">
+                  <td id="row_payload_ref_name_<%= position %>" ><%= payload_validation['ref_name'] %></td>
+                  <input type="hidden"  name="insurer_product_api[payload_validation][][ref_name]" id="payload_ref_name_<%= position %>" value="<%= payload_validation['ref_name'] %>">
+                  <td style="white-space: pre-wrap;" id="row_payload_validation_<%= position %>" ><%= payload_validation['validation'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][validation]" id="payload_validation_<%= position %>" value="<%= payload_validation['validation'] %>">
+                  <td id="row_payload_mapping_<%= position %>" ><%= payload_validation['mapping'].blank? ? nil : Mapping.find(payload_validation['mapping']).name %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][mapping]"  id="payload_mapping_id_<%= position %>" value="<%= payload_validation['mapping'] %>" >
+                  <td id="row_payload_mandatory_<%= position %>" style="color: <%= payload_validation['mandatory'] == 'true' ? '#5cb85c' : '#d9534f' %>;" ><%= payload_validation['mandatory'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][mandatory]"  id="payload_mandatory_<%= position %>" value="<%= payload_validation['mandatory'] %>" >
+                  <td id="row_payload_enable_validation_<%= position %>" style="color: <%= payload_validation['enable_validation'] == 'true' ? '#5cb85c' : '#d9534f' %>;" ><%= payload_validation['enable_validation'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][enable_validation]"  id="payload_enable_validation_<%= position %>" value="<%= payload_validation['enable_validation'] %>" >
+                  <td id="row_payload_encrypted_<%= position %>" style="color: <%= payload_validation['encypted'] == 'true' ? '#5cb85c' : '#d9534f' %>;" ><%= payload_validation['encrypted'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][encrypted]"  id="payload_encrypted_<%= position %>" value="<%= payload_validation['encrypted'] %>" >
+                  <td id="row_payload_is_array_<%= position %>" style="color: <%= payload_validation['is_array'] == 'true' ? '#5cb85c' : '#d9534f' %>;" ><%= payload_validation['is_array'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][is_array]"  id="payload_is_array_<%= position %>" value="<%= payload_validation['is_array'] %>" >
+                  <td id="row_payload_parent_array_<%= position %>" ><%= payload_validation['parent_array'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][parent_array]"  id="payload_parent_array_<%= position %>" value="<%= payload_validation['parent_array'] %>" >
+                  <td id="row_payload_description_<%= position %>" ><%= payload_validation['description'] %></td>
+                  <input type="hidden" name="insurer_product_api[payload_validation][][description]"  id="payload_description_<%= position %>" value="<%= payload_validation['description'] %>" >
+                  <td><a href="#" id="edit_payload_validation" data-toggle="modal" data-target="#<%= position %>_modal" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+        <!--<a class="btn btn-primary" id="add_payload_validation">Add Payload Validation</a>-->
+        <a class="btn btn-primary" data-toggle="modal" data-target="#myModal" >Add Payload Validation</a>
+
+      </div>
+
+
+      <div class="form-group">
+        <%= f.label :RSA_encrypt_public_key, 'RSA Encryption Public Key' %>
+        <p><em>Required if there are variables to be encrypted</em></p>
+        <%= f.text_area :RSA_encrypt_public_key, value: action_name == 'update_pending' ? @api['RSA_encrypt_public_key'] : @api_pending["RSA_encrypt_public_key"], class: 'form-control', rows: "8" %>
+      </div>
+
+      <div class="form-group ">
+        <%= f.label :validation, 'Require Validation' %><br>
+        <%= f.check_box :validation, checked: @pending_is_validation %>
+        Check if yes
+      </div>
+
+      <div class="form-group" >
+        <%= f.label :static_header, 'Static Header' %>
+        <table  class="table table-bordered" id="row_header">
+          <thead >
+          <tr class="active">
+            <th>#</th>
+            <th>Header Name</th>
+            <th>Header Value</th>
+            <th style="white-space: nowrap; width: 1%;" >Remove Header</th>
+          </tr>
+          </thead>
+          <tbody>
+            <% if action_name == 'update_pending' && !params[:insurer_product_api]['headers'].nil? %>
+              <% params[:insurer_product_api]['headers'].each_with_index do |header, index|%>
+                <tr id="payload_row">
+                  <td><%= index + 1%></td>
+                  <td><input type="text" name="insurer_product_api[headers][][head]" class="form-control" value="<%= header['head'] %>" ></td>
+                  <td><input type="text" name="insurer_product_api[headers][][value]" class="form-control" value="<%= header['value'] %>" ></td>
+                  <td><button type="button" class="btn btn-danger" id="remove_header">remove</button></td>
+                </tr>
+              <% end %>
+            <% else %>
+              <% @headers_pending.each_with_index do |header, index|%>
+                <tr id="payload_row">
+                  <td><%= index + 1%></td>
+                  <td><input type="text" name="insurer_product_api[headers][][head]" class="form-control" value="<%= header['head'] %>" ></td>
+                  <td><input type="text" name="insurer_product_api[headers][][value]" class="form-control" value="<%= header['value'] %>" ></td>
+                  <td><button type="button" class="btn btn-danger" id="remove_header">remove</button></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+        <a class="btn btn-primary" id="add_header">Add Static Header</a>
+      </div>
+
+
+      <div class="form-group">
+        <%= f.label :activation_status, 'Activated' %>
+        <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected: action_name == 'update_pending' ? @api['activation_status'] : @api_pending["activation_status"] }), {}, class: 'form-control', disabled: !can_approve_reject_deactivate  %>
+      </div>
+
+      <%= f.submit action_name == 'new' ? 'Submit' : 'Save Changes', class: 'btn btn-success' %>
+      <%= link_to 'Cancel', "/insurer/edit/#{@insurer.id}", class: 'btn btn-warning' %>
+    <% end %>
+
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+
+<!--Fresh form for add Payload Validation-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add Payload Validation</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label>Variable Name:<span>&#42;</span></label>
+          <input type="text" class="form-control" value="" id="new_name">
+        </div>
+
+        <div class="form-group">
+          <label>Key Name Reference:</label>
+          <input type="text" class="form-control" value="" id="new_name_reference">
+        </div>
+
+        <div class="form-group">
+          <label>Validation:</label>
+          <textarea name="" class="form-control" id="new_validation" cols="30" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Mapping List:</label>
+          <select name="new_mapping" id="new_mapping" class="form-control">
+            <option value="" selected="selected"></option>
+            <% @insurer_mapping.each do |map| %>
+              <option value="<%= map['id'] %>"><%= Mapping.find(map['id']).name %></option>
+            <% end %>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Mandatory?:</label><br>
+          <input type="checkbox" value="true" id="new_mandatory" name="new_mandatory">
+          Check if yes
+        </div>
+
+        <div class="form-group">
+          <label>Enable Validation?:</label><br>
+          <input type="checkbox" value="true" id="new_enable_validation" name="new_enable_validation">
+          Check if yes
+        </div>
+
+        <div class="form-group">
+          <label>Encrypted?:</label><br>
+          <input type="checkbox" value="true"  id="new_encrypted" name="new_encrypted" >
+          Check if yes
+        </div>
+
+        <div class="form-group">
+          <label>Is Array?:</label><br>
+          <input type="checkbox" value="true" id="new_is_array" name="new_is_array">
+          Check if yes
+        </div>
+
+        <div class="form-group">
+          <label>Belongs to Array Block:</label>
+          <input type="text" class="form-control" value="" id="new_parent_array">
+        </div>
+
+        <div class="form-group">
+          <label>Description:</label>
+          <input type="text" class="form-control" value="" id="new_description">
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal"  id="add_payload_validation">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal_creation">
+  <% if action_name == 'update_pending' && !params[:insurer_product_api]['payload_validation'].nil?%>
+    <% params[:insurer_product_api]['payload_validation'].each_with_index do |payload_validation, index| %>
+      <% position = index + 1%>
+      <div class="modal fade" id="<%= position %>_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Add Payload Validation</h4>
+            </div>
+            <div class="modal-body">
+
+              <div class="form-group">
+                <label>Variable Name:<span>&#42;</span></label>
+                <input type="text" class="form-control" value="" id="form_payload_name_<%= position %>">
+              </div>
+
+              <div class="form-group">
+                <label>Key Name Reference:</label>
+                <input type="text" class="form-control" value="" id="form_payload_ref_name_<%= position %>">
+              </div>
+
+              <div class="form-group">
+                <label>Validation:</label>
+                <textarea name="" class="form-control" id="form_payload_validation_<%= position %>" cols="30" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Mapping List:</label>
+                <select name="new_mapping" id="form_payload_mapping_<%= position %>" class="form-control">
+                  <option value="" selected="selected"></option>
+                  <% @insurer_mapping.each do |map| %>
+                    <option value="<%= map['id'] %>" <%= payload_validation['mapping'] == map['id'] ? 'selected' : nil %> ><%= Mapping.find(map['id']).name %></option>
+                  <% end %>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Mandatory?:</label><br>
+                <input type="checkbox" value="true" id="form_payload_mandatory_<%= position %>" >
+                Check if yes
+              </div>
+
+              <div class="form-group">
+                <label>Enable Validation?:</label><br>
+                <input type="checkbox" value="true" id="form_payload_enable_validation_<%= position %>" >
+                Check if yes
+              </div>
+
+              <div class="form-group">
+                <label>Encrypted?:</label><br>
+                <input type="checkbox" value="true"  id="form_payload_encrypted_<%= position %>" >
+                Check if yes
+              </div>
+
+              <div class="form-group">
+                <label>Is Array?:</label><br>
+                <input type="checkbox" value="true"  id="form_payload_is_array_<%= position %>" >
+                Check if yes
+              </div>
+
+              <div class="form-group">
+                <label>Belongs to Array Block:</label>
+                <input type="text" class="form-control" value=""  id="form_payload_parent_array_<%= position %>">
+              </div>
+
+              <div class="form-group">
+                <label>Description:</label>
+                <input type="text" class="form-control" value=""  id="form_payload_description_<%= position %>" >
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger delete_payload_validation" id="<%= position %>" data-dismiss="modal">Remove</button>
+              <button type="button" class="btn btn-primary update_payload_validation" id="<%= position %>" data-dismiss="modal" >Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <% @payload_validation_pending.each_with_index do |payload_validation, index| %>
+      <% position = index + 1%>
+      <div class="modal fade" id="<%= position %>_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Add Payload Validation</h4>
+            </div>
+            <div class="modal-body">
+
+              <div class="form-group">
+                <label>Variable Name:<span>&#42;</span></label>
+                <input type="text" class="form-control" value="" id="form_payload_name_<%= position %>">
+              </div>
+
+              <div class="form-group">
+                <label>Key Name Reference:</label>
+                <input type="text" class="form-control" value="" id="form_payload_ref_name_<%= position %>">
+              </div>
+
+              <div class="form-group">
+                <label>Validation:</label>
+                <textarea name="" class="form-control" id="form_payload_validation_<%= position %>" cols="30" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Mapping List:</label>
+                <select name="new_mapping" id="form_payload_mapping_<%= position %>" class="form-control">
+                  <option value="" selected="selected"></option>
+                  <% @insurer_mapping.each do |map| %>
+                    <option value="<%= map['id'] %>" <%= payload_validation['mapping'] == map['id'] ? 'selected' : nil %> ><%= Mapping.find(map['id']).name %></option>
+                  <% end %>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Mandatory?:</label><br>
+                <input type="checkbox" value="true" id="form_payload_mandatory_<%= position %>" >
+                Check if yes
+              </div>
+
+              <div class="form-group">
+                <label>Enable Validation?:</label><br>
+                <input type="checkbox" value="true" id="form_payload_enable_validation_<%= position %>" >
+                Check if yes
+              </div>
+
+              <div class="form-group">
+                <label>Encrypted?:</label><br>
+                <input type="checkbox" value="true"  id="form_payload_encrypted_<%= position %>" >
+                Check if yes
+              </div>
+
+              <div class="form-group">
+                <label>Is Array?:</label><br>
+                <input type="checkbox" value="true"  id="form_payload_is_array_<%= position %>" >
+                Check if yes
+              </div>
+
+              <div class="form-group">
+                <label>Belongs to Array Block:</label>
+                <input type="text" class="form-control" value=""  id="form_payload_parent_array_<%= position %>">
+              </div>
+
+              <div class="form-group">
+                <label>Description:</label>
+                <input type="text" class="form-control" value=""  id="form_payload_description_<%= position %>" >
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger delete_payload_validation" id="<%= position %>" data-dismiss="modal">Remove</button>
+              <button type="button" class="btn btn-primary update_payload_validation" id="<%= position %>" data-dismiss="modal" >Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

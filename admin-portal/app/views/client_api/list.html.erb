@@ -1,0 +1,44 @@
+<!--<h3>Manage Client APIs</h3>-->
+<table id="client_api_list" class="cell-border <%= @api_pendings.blank? && @apis.blank? ? nil : "css-serial" %>">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Client API Name</th>
+    <th>Derived From</th>
+    <th>Product ID</th>
+    <th>Path</th>
+    <th>Payloads</th>
+    <th>Activated</th>
+    <th>Edit</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @api_pendings.each do |pending|  %>
+    <tr>
+      <td></td>
+      <td><%= fa_icon('exclamation-circle', type: :solid, style: "color:red;") %> <%= pending.parse_content['name'] %></td>
+      <td><%= pending.parse_content['derived_from'] %></td>
+      <td><%= pending.client_api_product %></td>
+      <td><%= pending.parse_content['path'] %></td>
+      <td><%= JSON.parse(pending.parse_content['payloads']).blank? ? 'No' : 'Yes' %></td>
+      <td><%= pending.parse_content['activation_status'] == 'true' ? 'Activated' : 'Deactivated' %></td>
+      <td><a href="/client/api/edit_pending/<%= pending.id %>"><%= fa_icon('edit', type: :solid) %></a></td>
+    </tr>
+  <% end %>
+  <% @apis.each do |api| %>
+    <tr>
+      <td></td>
+      <td><%= Approval.where(table: 'CLIENT_API').where(row_id: api.id).any? ? fa_icon('exclamation-circle', type: :solid, style: "color:red;") : nil %> <%= api.name %></td>
+      <td><%= api.derived_from %></td>
+      <td><%= api.product.name %></td>
+      <td><%= api.path %></td>
+      <td><%= api.get_payloads.any? ? 'Yes' : 'No' %></td>
+      <td><%= api.activation_status ? 'Activated' : 'Deactivated' %></td>
+      <td><a href="/client/api/edit/<%= api.id %>"><%= fa_icon('edit', type: :solid) %></a></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<p class="m-t-10"><%= link_to 'Add New', client_api_new_path, class: 'btn btn-success' %></p>
+
+

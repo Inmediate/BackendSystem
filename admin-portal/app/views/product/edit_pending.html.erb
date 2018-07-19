@@ -1,0 +1,28 @@
+<!--<h3>Manage Client APIs > Edit Client API</h3>-->
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_for  @product, url: {action: "update_pending"}, html: { class: 'form' } do |f| %>
+      <div class="form-group">
+        <%= f.label :name do %>
+          Product Name: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :name, value: action_name == 'update_pending' ? @product.name : @product_pending["name"], class: 'form-control', required: true %>
+      </div>
+      <div class="form-group ">
+        <%= f.label :code do %>
+          Product Code: <span>&#42;</span>
+        <% end %>
+        <%= f.text_field :code, value: action_name == 'update_pending' ? @product.code : @product_pending["code"], class: 'form-control', required: true %>
+      </div>
+      <div class="form-group  ">
+        <%= f.label :activation_status, 'Activated' %>
+        <%= f.select :activation_status, options_for_select([['Activated', true], ['Deactivated', false]], { selected: action_name == 'update_pending' ? @product.activation_status : @product_pending["activation_status"] }), {}, class: 'form-control', disabled: !can_approve_reject_deactivate %>
+      </div>
+
+      <%= f.submit action_name == 'new' ? 'Submit' : 'Save Changes', class: 'btn btn-success' %>
+
+      <%= link_to 'Cancel', product_list_path, class: 'btn btn-warning' %>
+    <% end %>
+
+  </div>
+</div>

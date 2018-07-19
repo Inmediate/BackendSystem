@@ -1,0 +1,2 @@
+module InsurerMappingHelper
+end
